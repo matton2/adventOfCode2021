@@ -30,26 +30,37 @@ depth * hor
 
 # solve problem 1
 
-prob1 <- read_csv("day2/day2problem.csv", col_names = FALSE)
+day2 <- read_csv("day2/day2problem.csv", col_names = FALSE)
 
-hor <- 0
-depth <- 0
+# we can turn this thing into a function
 
-for(i in 1:NROW(prob1)) {
-  direction <- str_split(prob1$X1[i], " ")[[1]][1]
-  speed <- str_split(prob1$X1[i], " ")[[1]][2] %>% as.numeric()
+prob1 <- function(problemData) {
   
-  if(direction == "forward") {
-    hor <- hor + speed
-  } else if (direction == "down") {
-    depth <- depth + speed
-  } else {
-    depth <- depth - speed
+  hor <- 0
+  depth <- 0
+  
+  for(i in 1:NROW(problemData)) {
+    direction <- str_split(problemData[[1]][i], " ")[[1]][1]
+    speed <- str_split(problemData[[1]][i], " ")[[1]][2] %>% as.numeric()
+    
+    if(direction == "forward") {
+      hor <- hor + speed
+    } else if (direction == "down") {
+      depth <- depth + speed
+    } else {
+      depth <- depth - speed
+    }
+    
   }
+  
+  depth * hor
+  
   
 }
 
-depth * hor
+
+prob1(day2)
+
 
 # problem 2
 
@@ -81,4 +92,4 @@ prob2 <- function(problemData) {
 
 prob2(demoProblem)
 
-prob2(prob1)
+prob2(day2)
