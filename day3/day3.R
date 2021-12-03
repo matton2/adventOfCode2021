@@ -140,7 +140,7 @@ prob2 <- function(problem) {
   oxygen <- oxygen %>% unite('final',1:ncol(oxygen),sep="")
   co <- co %>% unite('final',1:ncol(co),sep="")
   
-  return(strtoi(oxygen$final[1], base = 2) * strtoi(co[[1]][[1]], base = 2))
+  return(strtoi(oxygen$final[1], base = 2) * strtoi(co$final[1], base = 2))
   
   
 }
