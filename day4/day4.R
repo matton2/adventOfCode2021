@@ -104,29 +104,6 @@ solve1 <- function(calledNumbers, cardData) {
 
 solve1(calledNumbersDemo, bingoCardsDataDemo)
 
-# bingoCardList <- list()
-# bingoCardNumber <- 0
-# 
-# for(i in seq(from=1, to=length(bingoCardsData)-1, by=5)) {
-#   bingoCardNumber <- bingoCardNumber +1
-#   bingoCardList[[bingoCardNumber]] <- bingoCard$new(bingoCardsData[i:(i+4)])
-# }
-# 
-# 
-# for(a in 1:length(calledNumbers)) {
-#   bingo <- FALSE
-#   for(b in 1:length(bingoCardList)) {
-#     bingoCardList[[b]]$calledNumber(calledNumbers[a])
-#     bingo <- bingoCardList[[b]]$checkBingoFunction(calledNumbers[a])
-#     if(bingo) {
-#       break
-#     }
-#   }
-#   if(bingo) {
-#     break
-#   }
-# }
-
 # onto problem 1
 
 calledNumbers <- read_csv("day4/day4.csv", col_names = FALSE, n_max = 1) %>% 
@@ -138,28 +115,6 @@ bingoCardProbData <- read_csv('day4/day4.csv', col_names = FALSE, skip = 1) %>%
   pull(X1)
 
 solve1(calledNumbers, bingoCardProbData)
-
-bingoCardList <- list()
-bingoCardNumber <- 0
-
-for(i in seq(from=1, to=length(bingoCardProbData)-4, by=5)) {
-  bingoCardNumber <- bingoCardNumber +1
-  bingoCardList[[bingoCardNumber]] <- bingoCard$new(bingoCardProbData[i:(i+4)])
-}
-
-for(a in 1:length(calledNumbers)) {
-  bingo <- FALSE
-  for(b in 1:length(bingoCardList)) {
-    bingoCardList[[b]]$calledNumber(calledNumbers[a])
-    bingo <- bingoCardList[[b]]$checkBingoFunction(calledNumbers[a])
-    if(bingo) {
-      break
-    }
-  }
-  if(bingo) {
-    break
-  }
-}
 
 # problem 2 is find last winning board
 
@@ -196,9 +151,6 @@ solve2 <- function(calledNumbers, cardData) {
       break
     }
   }
-  
-  
-  
 }
 
 solve2(calledNumbers, bingoCardProbData)
