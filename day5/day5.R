@@ -141,4 +141,5 @@ solve2 <- function(data) {
 
 solve2(demo)
 
-solve(problemData)
+solve2(problemData)
+
