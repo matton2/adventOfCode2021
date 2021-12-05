@@ -143,3 +143,35 @@ solve2(demo)
 
 solve2(problemData)
 
+# trying to understand the tidyverse solution
+
+# solution 1
+horVer <- problemData %>% 
+  # get only the data for hor/ver
+  filter(X1 == X2 | Y1 == Y2) %>%
+  # expand the x and y coordinates
+  mutate(x = map2(X1, X2, seq),
+         y = map2(Y1, Y2, seq)) %>% 
+  # now we can unnest them 
+  unnest(x) %>% 
+  unnest(y)
+
+horVer %>% 
+  # counts how many times the same point shows up
+  count(x, y) %>% 
+  summarize(sum(n>1))
+
+diag <- problemData %>% 
+  # get only the data for diag
+  filter(!(X1 == X2 | Y1 == Y2)) %>%
+  # expand the x and y coordinates
+  mutate(x = map2(X1, X2, seq),
+         y = map2(Y1, Y2, seq)) %>% 
+  # now we can unnest them 
+  unnest(c(x,y))
+
+
+bind_rows(horVer, diag) %>% 
+  # counts how many times the same point shows up
+  count(x, y) %>% 
+  summarize(sum(n>1))
