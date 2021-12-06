@@ -42,13 +42,13 @@ tictoc::toc()
 
 aBetterSolve <- function(fish, dayCount) {
   
-  # can i vectorize this
-  # I wonder if i can just keep track of the fish count and add to a data frame
-  
+  # set the day to 0
   currentDay <- 0
   
+  # build the count table
   fishCount <- tibble(fishNum = c(-1:8), count = 0)
   
+  # set the count table to starting number of fish
   fishCount$count[1] <- length(which(fish == -1))
   fishCount$count[2] <- length(which(fish == 0))
   fishCount$count[3] <- length(which(fish == 1))
@@ -60,21 +60,29 @@ aBetterSolve <- function(fish, dayCount) {
   fishCount$count[9] <- length(which(fish == 7))
   fishCount$count[10] <- length(which(fish == 8))
   
+  # this could be a for loop as well
   while(currentDay < dayCount) {
     
+    # move all the fish counts down 1
     fishCount <- fishCount %>% 
       mutate(count = lead(count))
     
+    # get the total number of new fish
     fishToAdd <- fishCount$count[1]
+    # set that count back to 0
     fishCount$count[1] <- 0
+    # those fish that are creating new fish get added to the current 6 day old fish
     fishCount$count[8] <- fishCount$count[8] + fishToAdd
+    # those new fish get added to day 8 fish
     fishCount$count[10] <- fishToAdd
     
+    # increase the day
     currentDay <- currentDay + 1
     
     
   }
   
+  # simply return the table, i could do the math here as well
   return(fishCount)
   
 }
