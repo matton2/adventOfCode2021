@@ -59,7 +59,7 @@ solve2 <- function(data) {
   finalNumber <- 0
   
   for (a in 1:length(data)) {
-    line <- str_split(data[1], "\\|")
+    line <- str_split(data[a], "\\|")
     
     numbers <- str_split(str_trim(line[[1]][[1]]), " ")[[1]]
     
@@ -195,7 +195,7 @@ solve2 <- function(data) {
     digitTibble <- tibble(code = digits)
     
     tempNumber <- digitTibble %>% 
-      left_join(numberTibble) %>% 
+      left_join(numberTibble, by = 'code') %>% 
       pull(number) %>%
       paste(., collapse = "") %>%
       as.numeric()
@@ -209,3 +209,4 @@ solve2 <- function(data) {
 
 solve2(oneLiner)
 solve2(demo)
+solve2(problem$X1)
