@@ -6,7 +6,7 @@ demo <- c('2199943210',
           '8767896789',
           '9899965678')
 
-str_split(demo, "")
+problemData <- read_csv('day9/day9.csv', col_names = FALSE) %>% pull(X1)
 
 
 findLowPoints <- function(data) {
@@ -115,3 +115,6 @@ findLowPoints <- function(data) {
   return(totalLowPoints)
   
 }
+
+findLowPoints(demo)
+findLowPoints(problemData)
