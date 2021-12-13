@@ -107,26 +107,6 @@ solve2 <- function(data, instructions) {
     
   }
   
-  finalData <- finalData %>% 
-    arrange(x, y) %>% 
-    mutate(xDiff = x - lead(x),
-           xDiff = ifelse(xDiff == -2, xDiff, NA),
-           color = NA)
-  
-  currentCount <- 1
-  
-  for(i in 1:NROW(finalData)) {
-    
-    if(is.na(finalData$xDiff[i])) {
-      finalData$color[i] <- currentCount
-    } else {
-      currentCount <- currentCount + 1
-      finalData$color[i] <- currentCount
-    }
-    
-    
-  }
-  
   return(finalData)
   
   
@@ -135,7 +115,6 @@ solve2 <- function(data, instructions) {
 # debugonce(solve2)
 part2 <- solve2(problemData, instructions)
 
-ggplot(part2, aes(x = x, y = y, color = as.factor(color))) +
-  geom_point() +
-  scale_y_reverse() +
+ggplot(part2, aes(x = x, y = -y)) +
+  geom_tile() +
   theme_classic()
