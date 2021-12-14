@@ -24,8 +24,16 @@ rules <- tibble(x = c('CH -> B',
   mutate(pair1 = pair,
          start = str_sub(pair1, 1, 1),
          end = str_sub(pair1, 2, 2),
+         pairing1 = paste0(start,insert),
+         pairing2 = paste0(insert, end),
          notFinalPairing = paste0(start, insert),
          final = paste0(start,insert,end)) 
+
+# uncomment below to try to get solve2 to work
+# %>% 
+#   select(pair, pairing1, pairing2) %>% 
+#   pivot_longer(cols = c(pairing1, pairing2), values_to = 'newPairs') %>% 
+#   select(-name)
 
 problemTemplate <- read_lines('day14/day14.txt', n_max = 1)
 
@@ -34,8 +42,16 @@ problemRules <- tibble(x = read_lines('day14/day14.txt', skip = 2)) %>%
   mutate(pair1 = pair,
          start = str_sub(pair1, 1, 1),
          end = str_sub(pair1, 2, 2),
+         pairing1 = paste0(start,insert),
+         pairing2 = paste0(insert, end),
          notFinalPairing = paste0(start, insert),
          final = paste0(start,insert,end)) 
+
+# uncomment below to try to get solve2 to work
+# %>% 
+#   select(pair, pairing1, pairing2) %>% 
+#   pivot_longer(cols = c(pairing1, pairing2), values_to = 'newPairs') %>% 
+#   select(-name)
 
 solve1 <- function(template, rules, steps) {
   
@@ -88,6 +104,70 @@ tictoc::tic()
 solve1(problemTemplate, problemRules, 10)
 tictoc::toc()
 
+solve2 <- function(template, rules, steps) {
+  
+  starting <- c()
+  
+  for(i in 1:nchar(template)-1) {
+    starting[i] <- str_sub(template, i, i +1)
+  }
+  
+  count <- rules %>% 
+    select(pair) %>% 
+    distinct() %>% 
+    mutate(total = ifelse(pair %in% starting, 1, 0))  
+  
+  for(i in 2:steps) {
+    stepCount <- count %>% select(pair) %>% mutate(increaseCount = 0)
+    for(j in 1:NROW(count)) {
+      if(count$total[j] > 0) {
+        # get the pair total
+        startingCount <- count$total[j]
+        # decrease the pair total by 1
+        count$total[j] <- 0
+        # get the current pair
+        currentPair <- count$pair[j]
+        # figure out the pair in makes
+        newPairs <- rules %>% filter(pair == currentPair) %>% pull(newPairs)
+        
+        # add the new pair and the current count
+        stepCount <- stepCount %>% 
+          mutate(increaseCount = ifelse(pair %in% newPairs, increaseCount + startingCount, increaseCount))
+        
+      }
+    }
+    # at the end of the step combine all the counts
+    count <- count %>% 
+      left_join(stepCount, by = c('pair' = 'pair')) %>% 
+      mutate(total = increaseCount) %>% 
+      select(-increaseCount)
+    
+  }
+    
+  totalTibble <- count %>% 
+    separate(pair, into= c('d', 'f', 'l'), sep = "") %>% 
+    select(l, total) %>% 
+    group_by(l) %>% 
+    summarise(sum = sum(total))
+  
+  
+  
+  # return(count)
+  return(max(totalTibble$sum) - min(totalTibble$sum))
+  
+}
+
+debugonce(solve2)
+
 tictoc::tic()
-part2 <- solve1(problemTemplate, problemRules, 15)
+part2 <- solve2(demoTemplate, rules, 10)
+part2 <- solve2(problemTemplate, problemRules, 10)
 tictoc::toc()
+
+
+day4Tibble <- tibble(pair = starting) %>% 
+  group_by(pair) %>% 
+  summarize(count = n())
+
+temp <- part2 %>% 
+  left_join(day4Tibble)
